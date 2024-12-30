@@ -8,7 +8,13 @@
         <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
     </head>
     <body>
-        <h1>Auctions</h1>
+        <div>
+            <a href = "{% url 'index' %}">
+                <img src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKvQ4Pvr8MU3QMOhu_3UFkztfs4qhp7Iz9_Q&s" width = "70" alt = "logo">
+                <label id="main-title">CS50 Auction</label>
+                <br><br>
+            </a>
+        </div>
         <div>
             {% if user.is_authenticated %}
                 Signed in as <strong>{{ user.username }}</strong>.
