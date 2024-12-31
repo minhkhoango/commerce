@@ -15,8 +15,6 @@ general_categories = [
     ("6", "Treats"),
 ]
 
-categories = models.CharField(max_length=20, choices=general_categories)
-
 class Product(models.Model):
     title = models.CharField(max_length=150)
     description = models.CharField(max_length=600)
@@ -28,3 +26,5 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+    
+

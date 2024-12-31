@@ -7,8 +7,12 @@ body {
     flex-wrap:wrap;
 }
 
+#file-heading {
+    text-align:center;
+}
+
 .product-item {
-    border-radius:3px;
+    border-radius:4px;
     border:1px solid black;
     height: 470px;
     width: 250px;
@@ -27,18 +31,6 @@ body {
     height:7%;
 }
 
-.view-listing {
-    border-radius: 3px;
-    background-color: rgb(84, 172, 236);
-    color: white;
-    font-weight: bold;
-    height:9%;
-}
-
-h2 {
-    text-align:center;
-}
-
 .categories-item {
     margin-left: 20px;
     margin-right:20px;
@@ -51,3 +43,37 @@ h2 {
     color: grey;
     text-decoration:none;
 }
+
+.post-date{
+    color:grey;
+}
+
+.product-left{
+    color:grey;
+    background-color:rgba(128, 128, 128, 0.305);
+    width:500px;
+    height:320px;
+    border:1px solid rgba(128, 128, 128, 0.305);
+}
+
+.product-right{
+    color:black;
+    text-align:left;
+    margin-left:25px;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:60% auto;
+}
+
+.place-picture {
+    display:block;
+    margin-left: auto;
+    margin-right: auto;
+    height:100%;
+    width:auto;
+}
+
+
+

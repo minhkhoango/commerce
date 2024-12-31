@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2 id="file-heading">Active Listings</h2>
 
     <div class = "flex">
         {% for product in products %}
@@ -11,10 +11,10 @@
                     <br>
                     <strong>{{ product.title }}</strong>
                 </div>
-                <div style="color:grey">Posted {{ product.post_date }}</div>
+                <div class="post-date">Posted {{ product.post_date }}</div>
                 <div class="low-ground">Seller: {{ product.seller }}</div>
-                <div class= "low-ground">Current price: ${{ product.bid_value }}</div>
-                <div><form action="{% url 'product_listing' product.id %}" method="post">
+                <div class="low-ground">Current price: ${{ product.bid_value }}</div>
+                <div id="view-listing"><form action="{% url 'product_listing' product.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="btn btn-primary btn-lg btn-block">View Listing</button>
                 </form></div>
