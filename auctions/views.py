@@ -4,8 +4,10 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.core.exceptions import ValidationError
 
-from .models import User, Product,general_categories
+from .models import User, Product,general_categories, Bid
 
 
 def index(request):
@@ -125,3 +127,22 @@ def removeWatchlist(request, product_id):
     currentuser = request.user
     product.watchlist.remove(currentuser)
     return HttpResponseRedirect(reverse('product_listing', args=(product_id, )))
+
+@login_required
+def bid(request, product_id):
+    if request.method == "POST":
+        offer_bid_value = int(request.POST.get("bid_value"))
+        user = request.user
+        product = Product.objects.get(pk=product_id)
+        new_bid = Bid(user=user, offer_bid_value=offer_bid_value, product=product)
+        try:
+            new_bid.clean() 
+            new_bid.save()
+            product.bid_value = new_bid.offer_bid_value
+            product.current_bidder = str(new_bid.user)
+            product.save()
+
+            messages.success(request, "You bid has been placed successfully")
+        except ValidationError as e:
+            messages.error(request, f"Bid failed: {e.message}")
+        return HttpResponseRedirect(reverse('product_listing', args=(product_id, )))
