@@ -64,13 +64,9 @@ def register(request):
     else:
         return render(request, "auctions/register.html")
 
-def product_listing(request, product_id):
-    return render(request, "auctions/product_listing.html",{
-        "product": Product.objects.get(pk=product_id),
-    })
+category_names = [category[1] for category in general_categories]
 
 def categories(request):
-    category_names = [category[1] for category in general_categories]
     if request.method == "POST":
         category = request.POST["category"]
         print(category)
@@ -81,29 +77,51 @@ def categories(request):
         "category_names" : category_names,
     })
 
+category_ids = {value:count for count, value in enumerate(category_names, start=1)}
+
 @login_required
 def new_listing(request):
-    if request.method == "POST":
-        title = request.POST["title"]
-        description = request.POST["description"]
-        bid_value = request.POST["bid_value"]
-        image_url = request.POST["image_url"]
-        seller = request.user.username
-
+    if request.method == "POST" and request.user.is_authenticated:
+        new_product = Product(
+            title = request.POST["title"],
+            description = request.POST["description"],
+            bid_value = request.POST["bid_value"],
+            categories = category_ids[request.POST["categories"]],
+            image_url = request.POST["image_url"],
+            seller = request.user,
+        )
+        new_product.save()
         return HttpResponseRedirect(reverse('index'))
     
     return render(request, "auctions/new_listing.html", {
-        "products": Product.objects.all(),
+        "category_names":["-----"]+category_names,
     })
            
 
-@login_required
-def watchlist(request):
-    if request.method == "POST":
-        product = Product.objects.get(pk=int(request.POST["product_id"]))
-        
-
-    return render(request, "auctions/watchlist.html", {
-        "user": request.user,
+def product_listing(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    isListingInWatchList = request.user in product.watchlist.all()
+    return render(request, "auctions/product_listing.html",{
+        "product": Product.objects.get(pk=product_id),
+        "isListingInWatchList" : isListingInWatchList,
     })
 
+@login_required
+def watchlist(request):
+    user = request.user
+    watchlists = user.ListingWatchList.all()
+    return render(request, "auctions/watchlist.html", {
+        "products": watchlists,
+    })
+
+def addWatchlist(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    currentuser = request.user
+    product.watchlist.add(currentuser)
+    return HttpResponseRedirect(reverse('product_listing', args=(product_id, )))
+
+def removeWatchlist(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    currentuser = request.user
+    product.watchlist.remove(currentuser)
+    return HttpResponseRedirect(reverse('product_listing', args=(product_id, )))

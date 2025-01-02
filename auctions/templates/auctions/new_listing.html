@@ -1,20 +1,23 @@
 {% extends 'auctions/layout.html' %}
 
 {% block body %}
-    <form action="{% url 'new_listing' %}" method="POST">
+    <form action="{% url 'new_listing' %}" method="POST" class="space-20-px">
         {% csrf_token %}
         <h2>New Listing</h2>
-        <input type="text" name="title" placeholder="title:">
+        <input class="new-listing" type="text" name="title" placeholder="Title">
         <br>
-        <input type="text" name="description" placeholder="description:">
+        <textarea class="new-listing" type="text" name="description" placeholder="Description"></textarea>
         <br>
-        <input type="number" name="bid_value" palceholder="bid value:">
+        <input class="new-listing" type="number" name="bid_value" palceholder="Bid value">
         <br>
-        <select name="categories">
-            {% for category in categories %}
+        <select name="categories" class="new-listing" >
+            {% for category in category_names %}
                 <option value="{{ category }}">{{ category }}</option>
             {% endfor %}
         </select>
+        <br>
+        <input class="new-listing" type="url" name="image_url" placeholder="Image URL">
+        <br>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 {% endblock %}

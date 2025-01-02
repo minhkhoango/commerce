@@ -1,5 +1,25 @@
 {% extends "auctions/layout.html" %}
 
-{% block body %}
-Yo! {{ user.username }}
+{% block body %}    
+    Yo! {{ user.username }}
+    <br>
+    <div class = "flex">
+        {% for product in products %}
+            <div class="product-item">
+                <div class="high-ground">
+                    <img src="{{ product.image_url }}" width="220" height=auto>
+                    <br>
+                    <strong>{{ product.title }}</strong>
+                </div>
+                <div class="post-date">Posted {{ product.post_date }}</div>
+                <div class="low-ground">Seller: {{ product.seller }}</div>
+                <div class="low-ground">Current price: ${{ product.bid_value }}</div>
+                <div id="view-listing"><form action="{% url 'product_listing' product.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-primary btn-lg btn-block">View Listing</button>
+                </form></div>
+            </div>
+        {% endfor %}
+    </div>
+
 {% endblock %}

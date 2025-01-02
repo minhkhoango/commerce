@@ -23,6 +23,7 @@ class Product(models.Model):
     image_url = models.URLField()
     seller = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank = True, related_name="info")
     post_date = models.DateTimeField(auto_now_add=True)
+    watchlist = models.ManyToManyField(User, blank=True, null=True, related_name="ListingWatchList")
 
     def __str__(self):
         return f"{self.title}"

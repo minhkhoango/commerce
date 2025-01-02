@@ -8,12 +8,24 @@
         <div class="product-right">
             <h2>{{ product.title }}</h2>
             <br>
+            <p>Seller: {{ product.seller }}</p>
+            <br>
             <p>{{ product.description }}</p>
                 <button type="button" class="btn btn-primary btn-lg btn-block">Place Bid</button>
-                <form action="{% url 'watchlist' %}" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-secondary btn-lg btn-block" value="{{ product.id }}" name="product_id">Add to watchlist</button>
-                </form>
+                <br>  
+                {% if user.is_authenticated %}
+                    {% if isListingInWatchList %}
+                        <form action="{% url 'removeWatchlist' product_id=product.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-lg btn-block">Remove from Watchlist</button>
+                        </form>
+                    {% else %}
+                        <form action="{% url 'addWatchlist' product_id=product.id %}" method="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-lg btn-block">Add to Watchlist</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
         </div>
     </div>  
 {% endblock %}
