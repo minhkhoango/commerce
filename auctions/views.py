@@ -12,7 +12,7 @@ from .models import User, Product,general_categories, Bid, Comment
 
 def index(request):
     return render(request, "auctions/index.html", {
-        "products": Product.objects.all()
+        "products": Product.objects.filter(is_active=True)
     })
 
 
@@ -73,7 +73,7 @@ def categories(request):
         category = request.POST["category"]
         print(category)
         return render(request, "auctions/index.html", {
-            "products": Product.objects.filter(categories=category),
+            "products": Product.objects.filter(categories=category, is_active=True),
         })
     return render(request, "auctions/categories.html", {
         "category_names" : category_names,
@@ -104,10 +104,15 @@ def product_listing(request, product_id):
     product = Product.objects.get(pk=product_id)
     isListingInWatchList = request.user in product.watchlist.all()
     comments = Comment.objects.filter(product=product).order_by('-id')
+    is_owner = request.user == product.seller
+    is_active = product.is_active
+
     return render(request, "auctions/product_listing.html",{
         "product": Product.objects.get(pk=product_id),
         "isListingInWatchList" : isListingInWatchList,
         "comments" : comments,
+        "is_owner": is_owner,
+        "is_active" : is_active,
     })
 
 @login_required
@@ -141,7 +146,7 @@ def bid(request, product_id):
             new_bid.clean() 
             new_bid.save()
             product.bid_value = new_bid.offer_bid_value
-            product.current_bidder = str(new_bid.user)
+            product.current_bidder = new_bid.user.username
             product.save()
 
             messages.success(request, "You bid has been placed successfully")
@@ -171,3 +176,22 @@ def comment(request, product_id):
                 "isListingInWatchList" : isListingInWatchList,
                 "comments" : comments,
             })
+        
+def close_auction(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    product.is_active = False
+    product.save()
+
+    isListingInWatchList = request.user in product.watchlist.all()
+    comments = Comment.objects.filter(product=product).order_by('-id')
+    is_owner = request.user.username == product.current_bidder
+    is_active = product.is_active
+    print(is_owner, is_active)
+
+    return render(request, "auctions/product_listing.html",{
+        "product": Product.objects.get(pk=product_id),
+        "isListingInWatchList" : isListingInWatchList,
+        "comments" : comments,
+        "is_owner": is_owner,
+        "is_active" : is_active,
+    })

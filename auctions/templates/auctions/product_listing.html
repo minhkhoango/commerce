@@ -1,19 +1,39 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
+    {% if not product.is_active and is_owner %}
+        <div class="alert alert-success" role="alert">
+            Congrats! You have won the auction!
+        </div>
+    {% elif not product.is_active and not is_owner %}
+        <div class="alert alert-danger" role="alert">
+            Unfortunately, you did not won the auction.
+        </div>
+    {% endif %}
     <div class="container">
         <div class="product-left">
             <img class="place-picture" src="{{product.image_url}}" width = "350">
         </div>
         <div class="product-right">
-            <h2>{{ product.title }}</h2>
+            <div>
+                <h2>
+                    {{ product.title }}
+                    {% if is_owner %}
+                        <form action="{% url 'close_auction' product_id=product.id %}" method="POST">
+                            {% csrf_token %}
+                            <input type="image" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDgCtB72sd2csn3h4Xoktuuub7vFQQ-dGBOw&s" width="20">
+                        </form>
+                    {% endif %}
+                </h2>
+            </div>
+
             <p>Seller: {{ product.seller }}</p>
             <p>{{ product.description }}</p>
             <p>Current bid: ${{ product.bid_value }} by {{ product.current_bidder }}</p>
                 {% if user.is_authenticated %}
                     <form action="{% url 'bid' product_id=product.id %}" method="POST">
                         {% csrf_token %}
-                        <input type="number" name="bid_value">
+                        <input type="number" name="bid_value" id = bid_value>
                         <button type="submit" class="btn btn-primary">Place Bid</button>
                     </form>
                 {% endif %}

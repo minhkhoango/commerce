@@ -2,6 +2,10 @@ body {
     padding: 10px;
 }
 
+.heading-size {
+    font-size:30px;
+}
+
 .flex {
     display: flex;
     flex-wrap:wrap;
@@ -11,6 +15,9 @@ body {
     text-align:center;
 }
 
+.nav {
+    background-color: rgb(250, 246, 219); 
+}
 .product-item {
     border-radius:4px;
     border:2px solid rgba(0, 0, 0, 0.309);
@@ -24,6 +31,7 @@ body {
     border-bottom:2px solid rgba(0, 0, 0, 0.309);
     height:70%;
     padding:5px;
+    padding-top:15px;
 }
 
 .low-ground {
@@ -40,7 +48,7 @@ body {
 
 #main-title{
     font-size:30px;
-    color: grey;
+    color: rgb(98, 162, 98);
     text-decoration:none;
 }
 
@@ -92,4 +100,20 @@ body {
     padding-left:8px;
     padding-top:4px;
     margin-left:20px;
+    background-color: rgb(236, 234, 234);
+}
+
+#bid_value {
+    height:35px;
+    border-radius:3px;
+}
+
+.nav-link{
+    font-weight: bold;
+    color: rgb(73, 172, 252);
+}
+
+.nav{
+    border: 1px solid rgb(70, 79, 86);
+    border-radius: 3px;
 }
