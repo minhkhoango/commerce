@@ -86,3 +86,10 @@ body {
     margin-left:20px;
 }
 
+.comment {
+    border-radius:10px;
+    border: 2px solid grey;
+    padding-left:8px;
+    padding-top:4px;
+    margin-left:20px;
+}

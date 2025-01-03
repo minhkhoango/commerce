@@ -41,3 +41,12 @@ class Bid(models.Model):
 
     def __str__(self):
         return f"Bid {self.product.title} at {self.offer_bid_value}"
+
+class Comment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True)
+    title = models.CharField(max_length=150, null=True)
+    product_comment = models.CharField(max_length=600, null=True)
+
+    def __str__(self):
+        return f"{self.title}"

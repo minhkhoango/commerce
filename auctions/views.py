@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.exceptions import ValidationError
 
-from .models import User, Product,general_categories, Bid
+from .models import User, Product,general_categories, Bid, Comment
 
 
 def index(request):
@@ -103,9 +103,11 @@ def new_listing(request):
 def product_listing(request, product_id):
     product = Product.objects.get(pk=product_id)
     isListingInWatchList = request.user in product.watchlist.all()
+    comments = Comment.objects.filter(product=product).order_by('-id')
     return render(request, "auctions/product_listing.html",{
         "product": Product.objects.get(pk=product_id),
         "isListingInWatchList" : isListingInWatchList,
+        "comments" : comments,
     })
 
 @login_required
@@ -146,3 +148,26 @@ def bid(request, product_id):
         except ValidationError as e:
             messages.error(request, f"Bid failed: {e.message}")
         return HttpResponseRedirect(reverse('product_listing', args=(product_id, )))
+
+@login_required  
+def comment(request, product_id):
+    product = Product.objects.get(pk=product_id)
+    isListingInWatchList = request.user in product.watchlist.all()
+    
+    if request.method == "POST":
+        title = request.POST.get("title")
+        product_comment = request.POST.get("product_comment")
+        user = request.user
+        new_comment = Comment(user=user, product=product, title=title, product_comment=product_comment)
+        if new_comment.product_comment is not None and new_comment.title is not None:
+            new_comment.clean()
+            new_comment.save()
+            return HttpResponseRedirect(reverse('product_listing', args=(product_id, )))
+
+        else:
+            comments = Comment.objects.filter(product=product).order_by('-id')
+            return render(request, "auctions/comment.html",{
+                "product": Product.objects.get(pk=product_id),
+                "isListingInWatchList" : isListingInWatchList,
+                "comments" : comments,
+            })

@@ -36,8 +36,14 @@
     <br>
     <form action="{% url 'comment' product_id=product.id %}" method="POST" class="space-20-px">
         {% csrf_token %}
-        <button type="submit" class="btn btn-info">Comment</button>
+        <h4>Comment</h4>
+        <input class="new-listing" type="text" name="title" placeholder="Title">
+        <br>
+        <textarea class="new-listing" type="text" name="product_comment" placeholder="Your comment"></textarea>
+        <br>
+        <button type="submit" class="btn btn-primary">Comment</button>
     </form>
+
     <br>
     {% for comment in comments %}
         <div class="comment">
@@ -46,7 +52,6 @@
             <br>
             <p>&nbsp;&nbsp;{{ comment.product_comment }}</p>
         </div>
-        <br>
+        <br><br>
     {% endfor %}
-    
 {% endblock %}
